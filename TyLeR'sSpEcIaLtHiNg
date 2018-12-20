@@ -1,0 +1,72 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaBase;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaRoverRuckus;
+
+@Autonomous(name = "TylersSpecialThing (Blocks to Java)", group = "")
+public class TylersSpecialThing extends LinearOpMode {
+
+  private VuforiaRoverRuckus vuforiaRoverRuckus;
+
+  /**
+   * This function is executed when this Op Mode is selected from the Driver Station.
+   */
+  @Override
+  public void runOpMode() {
+    VuforiaBase.TrackingResults vuMarkResult1;
+    VuforiaBase.TrackingResults vuMarkResult2;
+    VuforiaBase.TrackingResults vuMarkResult4;
+    VuforiaBase.TrackingResults vuMarkResult3;
+
+    vuforiaRoverRuckus = new VuforiaRoverRuckus();
+
+    // Initialize Vuforia
+    vuforiaRoverRuckus.initialize("", VuforiaLocalizer.CameraDirection.BACK,
+        true, true, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES,
+        0, 0, 0, 0, 0, 0, true);
+    // Prompt user to push start button.
+    telemetry.addData("VuMark Example", "Press start to continue...");
+    telemetry.update();
+    // Wait until user pushes start button.
+    waitForStart();
+    if (opModeIsActive()) {
+      // Activate Vuforia software.
+      vuforiaRoverRuckus.activate();
+      while (opModeIsActive()) {
+        // Get the tracking results.
+        vuMarkResult1 = vuforiaRoverRuckus.track("BluePerimeter");
+        vuMarkResult2 = vuforiaRoverRuckus.track("RedPerimeter");
+        vuMarkResult3 = vuforiaRoverRuckus.track("FrontPerimeter");
+        vuMarkResult4 = vuforiaRoverRuckus.track("BackPerimeter");
+        // Is a VuMark visible?
+        if (vuMarkResult1.isVisible || vuMarkResult2.isVisible || vuMarkResult3.isVisible || vuMarkResult4.isVisible) {
+          // Yes, we see one.
+          telemetry.addData("Perimeter", "A Perimeter is visible.");
+          // What type of VuMark is it?
+          if (vuMarkResult1.isVisible) {
+            telemetry.addData("Perimeter", "BLUE!");
+          } else if (vuMarkResult2.isVisible) {
+            telemetry.addData("Perimeter", "RED!");
+          } else if (vuMarkResult3.isVisible) {
+            telemetry.addData("Perimeter", "FRONT!");
+          } else if (vuMarkResult4.isVisible) {
+            telemetry.addData("Perimeter", "BACK!");
+          } else {
+            telemetry.addData("Perimeter", "Unrecognized");
+          }
+        } else {
+          // No, we don't see one.
+        }
+        telemetry.addData("Perimeter", "No Perimeters visible");
+        telemetry.update();
+      }
+      // Deactivate before exiting.
+      vuforiaRoverRuckus.deactivate();
+    }
+
+    vuforiaRoverRuckus.close();
+  }
+}
