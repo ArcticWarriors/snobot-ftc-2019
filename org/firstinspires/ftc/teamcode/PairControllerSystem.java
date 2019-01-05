@@ -9,11 +9,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 /**
  * Control system for two, a driver and an operator.
  */
-public class PairControlSystem implements ControlSystem {
+public class PairControllerSystem implements ControllerSystem {
     public final Gamepad driver;
     public final Gamepad operator;
 
-    public PairControlSystem(final Gamepad driver, final Gamepad operator) {
+    public PairControllerSystem(final Gamepad driver, final Gamepad operator) {
         this.driver = driver;
         this.operator = operator;
     }

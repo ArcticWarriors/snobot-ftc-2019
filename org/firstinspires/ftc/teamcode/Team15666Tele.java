@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Team15666Tele extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private ControlSystem controlSystem = null;
+    private ControllerSystem controllerSystem = null;
     private DriveSystem driveSystem = null;
     private ArmSystem armSystem = null;
 
@@ -37,7 +37,7 @@ public class Team15666Tele extends LinearOpMode {
     }
 
     private void initSystems() {
-        this.controlSystem = new PairControlSystem(
+        this.controllerSystem = new PairControllerSystem(
                 Team15666Devices.getDriverGamepad(this),
                 Team15666Devices.getOperatorGamepad(this));
         this.driveSystem = new PovDriveSystem(
@@ -54,14 +54,14 @@ public class Team15666Tele extends LinearOpMode {
     }
 
     private void updateSystems() {
-        this.driveSystem.update(this.controlSystem);
-        this.armSystem.update(this.controlSystem);
+        this.driveSystem.update(this.controllerSystem);
+        this.armSystem.update(this.controllerSystem);
     }
 
     private void updateTelemetry(final String status) {
         updateTelemetry(
                 status,
-                this.controlSystem.getTelemetry(),
+                this.controllerSystem.getTelemetry(),
                 this.driveSystem.getTelemetry(),
                 this.armSystem.getTelemetry());
     }
@@ -97,7 +97,7 @@ public class Team15666Tele extends LinearOpMode {
         }
 
         @Override
-        public void update(final ControlSystem controls) {
+        public void update(final ControllerSystem controls) {
             if (controls.getOperatorGamepad() == null) {
                 return;
             }

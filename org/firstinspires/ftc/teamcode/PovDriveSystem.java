@@ -26,7 +26,7 @@ public class PovDriveSystem implements DriveSystem {
     }
 
     @Override
-    public void update(final ControlSystem controls) {
+    public void update(final ControllerSystem controls) {
         if (controls.getDriverGamepad() == null) {
             return;
         }
