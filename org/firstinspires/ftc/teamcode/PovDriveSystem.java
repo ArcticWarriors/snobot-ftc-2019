@@ -27,6 +27,10 @@ public class PovDriveSystem implements DriveSystem {
 
     @Override
     public void update(final ControlSystem controls) {
+        if (controls.getDriverGamepad() == null) {
+            return;
+        }
+
         final float forwardBack = controls.getDriverGamepad().left_stick_y;
         final float leftRight = controls.getDriverGamepad().right_stick_x;
         this.left.setPower(forwardBack + leftRight);

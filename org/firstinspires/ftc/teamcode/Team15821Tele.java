@@ -91,6 +91,10 @@ public class Team15821Tele extends LinearOpMode {
 
         @Override
         public void update(final ControlSystem controls) {
+            if (controls.getOperatorGamepad() == null) {
+                return;
+            }
+
             final float towerUpDown = controls.getOperatorGamepad().left_stick_y;
             final float rollerIn = controls.getOperatorGamepad().right_trigger;
             final float rollerOut = controls.getOperatorGamepad().left_trigger;

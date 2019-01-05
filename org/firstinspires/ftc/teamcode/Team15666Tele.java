@@ -98,6 +98,10 @@ public class Team15666Tele extends LinearOpMode {
 
         @Override
         public void update(final ControlSystem controls) {
+            if (controls.getOperatorGamepad() == null) {
+                return;
+            }
+
             final float pulleyUpDown = controls.getOperatorGamepad().right_stick_y;
             final float elevatorOutIn = controls.getOperatorGamepad().left_stick_y;
             final float clawTrigger = controls.getOperatorGamepad().right_trigger;

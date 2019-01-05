@@ -28,14 +28,27 @@ public class PairControlSystem implements ControlSystem {
 
     @Override
     public String getTelemetry() {
-        return this.driver.left_stick_x
-                + "," + this.driver.left_stick_y
-                + "," + this.driver.right_stick_x
-                + "," + this.driver.right_stick_y
-                + " "
-                + this.operator.left_stick_x
-                + "," + this.operator.left_stick_y
-                + "," + this.operator.right_stick_x
-                + "," + this.operator.right_stick_y;
+        String driverTelemetry;
+        String operatorTelemetry;
+
+        if (this.driver == null) {
+            driverTelemetry = "<no dr>";
+        } else {
+            driverTelemetry = this.driver.left_stick_x
+                    + "," + this.driver.left_stick_y
+                    + "," + this.driver.right_stick_x
+                    + "," + this.driver.right_stick_y;
+        }
+
+        if (this.operator != null) {
+            operatorTelemetry = "<no op>";
+        } else {
+            operatorTelemetry = this.operator.left_stick_x
+                    + "," + this.operator.left_stick_y
+                    + "," + this.operator.right_stick_x
+                    + "," + this.operator.right_stick_y;
+        }
+
+        return driverTelemetry + " " + operatorTelemetry;
     }
 }
