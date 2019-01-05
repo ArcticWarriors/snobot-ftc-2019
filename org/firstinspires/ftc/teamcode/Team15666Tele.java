@@ -111,7 +111,9 @@ public class Team15666Tele extends LinearOpMode {
                 clawOpen = !clawOpen;
             }
 
-            final float clawOpenClose = clawOpen ? 1.0f : 0.0f;
+            final float clawOpenClose = clawOpen
+                    ? Team15666Devices.ClawOpenPosition
+                    : Team15666Devices.ClawClosePosition;
             prevClawTrigger = clawTrigger;
 
             this.pulley.setPower(pulleyUpDown);

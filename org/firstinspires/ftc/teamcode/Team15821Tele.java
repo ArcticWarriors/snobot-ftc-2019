@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.Team15821Devices.RollerSpeed;
+
 /**
  * Standard teleop OpMode for Team 15821.
  */
@@ -101,10 +103,10 @@ public class Team15821Tele extends LinearOpMode {
 
             this.tower.setPower(towerUpDown);
 
-            if (rollerIn > 0.0f) {
-                this.roller.setPower(rollerIn);
-            } else if (rollerOut > 0.0f) {
-                this.roller.setPower(-rollerOut);
+            if (rollerIn >= Team15821Devices.RollerTriggerThreshold) {
+                this.roller.setPower(Team15821Devices.RollerPower);
+            } else if (rollerOut >= Team15821Devices.RollerTriggerThreshold) {
+                this.roller.setPower(-Team15821Devices.RollerPower);
             } else {
                 this.roller.setPower(0.0f);
             }

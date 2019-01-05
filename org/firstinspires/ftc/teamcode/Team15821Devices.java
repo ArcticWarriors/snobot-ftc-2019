@@ -24,6 +24,9 @@ public class Team15821Devices {
     public static final DcMotor.Direction TowerDirection = DcMotorSimple.Direction.FORWARD;
     public static final CRServo.Direction RollerDirection = CRServo.Direction.FORWARD;
 
+    public static final float RollerTriggerThreshold = 0.5f;
+    public static final float RollerPower = 0.7f;
+
     public static Gamepad getDriverGamepad(final OpMode opMode) {
         return getGamepad(opMode, DriverGamepad);
     }
