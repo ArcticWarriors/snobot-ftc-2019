@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.Team15821Devices.RollerSpeed;
-
 /**
  * Standard teleop OpMode for Team 15821.
  */
