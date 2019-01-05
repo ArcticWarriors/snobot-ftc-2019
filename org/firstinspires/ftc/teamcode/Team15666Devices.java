@@ -17,8 +17,8 @@ public class Team15666Devices {
     public static final int OperatorGamepad = 2;
     public static final String DriveLeftName = "left_drive";
     public static final String DriveRightName = "right_drive";
-    public static final String PulleyName = "arm_1";
-    public static final String ElevatorName = "arm_2";
+    public static final String PulleyName = "arm_2";
+    public static final String ElevatorName = "arm_1";
     public static final String ClawName = "servo_1";
 
     public static final DcMotor.Direction DriveLeftDirection = DcMotorSimple.Direction.FORWARD;
@@ -26,6 +26,9 @@ public class Team15666Devices {
     public static final DcMotor.Direction PulleyDirection = DcMotorSimple.Direction.FORWARD;
     public static final DcMotor.Direction ElevatorDirection = DcMotorSimple.Direction.FORWARD;
 
+    public static final float ElevatorPowerHalt = 0.1f;
+    public static final float ElevatorScalePowerUp = 0.6f;
+    public static final float ElevatorScalePowerDown = 0.25f;
     public static final float ClawTriggerThreshold = 0.5f;
     public static final float ClawOpenPosition = 1.0f;
     public static final float ClawClosePosition = 0.0f;

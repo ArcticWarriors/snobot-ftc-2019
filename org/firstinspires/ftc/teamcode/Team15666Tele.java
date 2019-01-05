@@ -106,6 +106,15 @@ public class Team15666Tele extends LinearOpMode {
             final float elevatorOutIn = controls.getOperatorGamepad().left_stick_y;
             final float clawTrigger = controls.getOperatorGamepad().right_trigger;
 
+            float elevatorPower = elevatorOutIn >= 0.0
+                    ? elevatorOutIn * Team15666Devices.ElevatorScalePowerUp
+                    : elevatorOutIn * Team15666Devices.ElevatorScalePowerDown;
+
+            if (elevatorPower >= -Team15666Devices.ElevatorPowerHalt
+                    && elevatorPower <= Team15666Devices.ElevatorPowerHalt) {
+                elevatorPower = Team15666Devices.ElevatorPowerHalt;
+            }
+
             if (prevClawTrigger < Team15666Devices.ClawTriggerThreshold
                     && clawTrigger >= Team15666Devices.ClawTriggerThreshold) {
                 clawOpen = !clawOpen;
@@ -117,7 +126,7 @@ public class Team15666Tele extends LinearOpMode {
             prevClawTrigger = clawTrigger;
 
             this.pulley.setPower(pulleyUpDown);
-            this.elevator.setPower(elevatorOutIn);
+            this.elevator.setPower(elevatorPower);
             this.claw.setPosition(clawOpenClose);
         }
 
