@@ -27,8 +27,8 @@ public class Team15666Devices {
     public static final DcMotor.Direction ElevatorDirection = DcMotorSimple.Direction.FORWARD;
 
     public static final float ElevatorPowerHalt = 0.1f;
-    public static final float ElevatorScalePowerUp = 0.6f;
-    public static final float ElevatorScalePowerDown = 0.25f;
+    public static final float ElevatorScalePowerUp = 1.0f;
+    public static final float ElevatorScalePowerDown = 0.6f;
     public static final float ClawTriggerThreshold = 0.5f;
     public static final float ClawOpenPosition = 1.0f;
     public static final float ClawClosePosition = 0.0f;
