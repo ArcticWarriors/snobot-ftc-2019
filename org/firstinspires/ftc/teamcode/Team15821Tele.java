@@ -90,6 +90,11 @@ public class Team15821Tele extends LinearOpMode {
         }
 
         @Override
+        public void update() {
+
+        }
+
+        @Override
         public void update(final ControllerSystem controls) {
             if (controls.getOperatorGamepad() == null) {
                 return;
@@ -112,7 +117,8 @@ public class Team15821Tele extends LinearOpMode {
 
         @Override
         public String getTelemetry() {
-            return this.tower.getPower() + "," + this.roller.getPower();
+            return this.tower.getPower() + "," + this.roller.getPower()
+                    + this.tower.getCurrentPosition();
         }
     }
 }

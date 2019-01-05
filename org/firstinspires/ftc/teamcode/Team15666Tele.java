@@ -97,11 +97,6 @@ public class Team15666Tele extends LinearOpMode {
         }
 
         @Override
-        public void update() {
-
-        }
-
-        @Override
         public void update(final ControllerSystem controls) {
             if (controls.getOperatorGamepad() == null) {
                 return;

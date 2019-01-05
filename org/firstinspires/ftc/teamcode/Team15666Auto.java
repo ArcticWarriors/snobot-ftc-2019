@@ -4,14 +4,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Standard autonomous OpMode for Team 15666.
  */
 
-@Autonomous(name = "Standard Auto", group = "Linear Opmode")
+@TeleOp(name = "Standard Auto", group = "Linear Opmode")
 public class Team15666Auto extends LinearOpMode {
 
     @Override
