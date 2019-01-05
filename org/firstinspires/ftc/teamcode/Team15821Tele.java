@@ -6,9 +6,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -160,12 +160,12 @@ public class Team15821Tele extends LinearOpMode {
 
     class TowerRollerArmSystem implements ArmSystem {
         public final DcMotor tower;
-        public final Servo roller;
+        public final CRServo roller;
 
         public TowerRollerArmSystem(
                 final DcMotor tower,
                 final DcMotor.Direction towerDirection,
-                final Servo roller) {
+                final CRServo roller) {
             this.tower = tower;
             this.tower.setDirection(towerDirection);
             this.roller = roller;

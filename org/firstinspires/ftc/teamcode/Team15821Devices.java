@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class Team15821Devices {
     public static final Class<DcMotor> DriveLeftClass = DcMotor.class;
     public static final Class<DcMotor> DriveRightClass = DcMotor.class;
     public static final Class<DcMotor> TowerClass = DcMotor.class;
-    public static final Class<Servo> RollerClass = Servo.class;
+    public static final Class<CRServo> RollerClass = CRServo.class;
 
     public static final int DriverGamepad = 1;
     public static final int OperatorGamepad = 2;
