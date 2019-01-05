@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -45,11 +46,12 @@ public class Team15666Tele extends LinearOpMode {
                 Team15666Devices.DriveLeftDirection,
                 this.hardwareMap.get(Team15666Devices.DriveRightClass, Team15666Devices.DriveRightName),
                 Team15666Devices.DriveRightDirection);
-        this.armSystem = new PulleyElevatorArmSystem(
+        this.armSystem = new ElevatorArmSystem(
                 this.hardwareMap.get(Team15666Devices.PulleyClass, Team15666Devices.PulleyName),
                 Team15666Devices.PulleyDirection,
                 this.hardwareMap.get(Team15666Devices.ElevatorClass, Team15666Devices.ElevatorName),
-                Team15666Devices.ElevatorDirection);
+                Team15666Devices.ElevatorDirection,
+                this.hardwareMap.get(Team15666Devices.ClawClass, Team15666Devices.ClawName));
     }
 
     private void updateSystems() {
@@ -158,32 +160,51 @@ public class Team15666Tele extends LinearOpMode {
         }
     }
 
-    class PulleyElevatorArmSystem implements ArmSystem {
+    class ElevatorArmSystem implements ArmSystem {
         public final DcMotor pulley;
         public final DcMotor elevator;
+        public final Servo claw;
 
-        public PulleyElevatorArmSystem(
+        private boolean clawOpen = true;
+        private float prevClawTrigger = 0.0f;
+
+        public ElevatorArmSystem(
                 final DcMotor pulley,
                 final DcMotor.Direction pulleyDirection,
                 final DcMotor elevator,
-                final DcMotor.Direction elevatorDirection) {
+                final DcMotor.Direction elevatorDirection,
+                final Servo claw) {
             this.pulley = pulley;
             this.pulley.setDirection(pulleyDirection);
             this.elevator = elevator;
             this.elevator.setDirection(elevatorDirection);
+            this.claw = claw;
         }
 
         @Override
         public void update(final ControlSystem controls) {
             final float pulleyUpDown = controls.getOperatorGamepad().right_stick_y;
             final float elevatorOutIn = controls.getOperatorGamepad().left_stick_y;
+            final float clawTrigger = controls.getOperatorGamepad().right_trigger;
+
+            if (prevClawTrigger < Team15666Devices.ClawTriggerThreshold
+                    && clawTrigger >= Team15666Devices.ClawTriggerThreshold) {
+                clawOpen = !clawOpen;
+            }
+
+            final float clawOpenClose = clawOpen ? 1.0f : 0.0f;
+            prevClawTrigger = clawTrigger;
+
             this.pulley.setPower(pulleyUpDown);
             this.elevator.setPower(elevatorOutIn);
+            this.claw.setPosition(clawOpenClose);
         }
 
         @Override
         public String getTelemetry() {
-            return this.pulley.getPower() + "," + this.elevator.getPower();
+            return this.pulley.getPower()
+                    + "," + this.elevator.getPower()
+                    + "," + this.claw.getPosition();
         }
     }
 }

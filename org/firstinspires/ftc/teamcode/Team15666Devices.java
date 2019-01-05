@@ -26,6 +26,8 @@ public class Team15666Devices {
     public static final DcMotor.Direction PulleyDirection = DcMotorSimple.Direction.FORWARD;
     public static final DcMotor.Direction ElevatorDirection = DcMotorSimple.Direction.FORWARD;
 
+    public static final float ClawTriggerThreshold = 0.5f;
+
     public static Gamepad getDriverGamepad(final OpMode opMode) {
         return getGamepad(opMode, DriverGamepad);
     }
