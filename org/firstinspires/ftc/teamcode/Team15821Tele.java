@@ -49,7 +49,8 @@ public class Team15821Tele extends LinearOpMode {
         this.armSystem = new TowerRollerArmSystem(
                 this.hardwareMap.get(Team15821Devices.TowerClass, Team15821Devices.TowerName),
                 Team15821Devices.TowerDirection,
-                this.hardwareMap.get(Team15821Devices.RollerClass, Team15821Devices.RollerName));
+                this.hardwareMap.get(Team15821Devices.RollerClass, Team15821Devices.RollerName),
+                Team15821Devices.RollerDirection);
     }
 
     private void updateSystems() {
@@ -165,24 +166,34 @@ public class Team15821Tele extends LinearOpMode {
         public TowerRollerArmSystem(
                 final DcMotor tower,
                 final DcMotor.Direction towerDirection,
-                final CRServo roller) {
+                final CRServo roller,
+                final CRServo.Direction rollerDirection) {
             this.tower = tower;
             this.tower.setDirection(towerDirection);
             this.roller = roller;
+            this.roller.setDirection(rollerDirection);
         }
 
         @Override
         public void update(final ControlSystem controls) {
             final float towerUpDown = controls.getOperatorGamepad().left_stick_y;
-            //final float rollerInOut = controls.getOperatorGamepad().left_stick_y;
+            final float rollerIn = controls.getOperatorGamepad().right_trigger;
+            final float rollerOut = controls.getOperatorGamepad().left_trigger;
+
             this.tower.setPower(towerUpDown);
-            //this.elevator.setPower(elevatorOutIn);
-            //this.roller.setDirection(Servo.Direction.FORWARD);
+
+            if (rollerIn > 0.0f) {
+                this.roller.setPower(rollerIn);
+            } else if (rollerOut > 0.0f) {
+                this.roller.setPower(-rollerOut);
+            } else {
+                this.roller.setPower(0.0f);
+            }
         }
 
         @Override
         public String getTelemetry() {
-            return this.tower.getPower() + "," + this.roller.getDirection();
+            return this.tower.getPower() + "," + this.roller.getPower();
         }
     }
 }
