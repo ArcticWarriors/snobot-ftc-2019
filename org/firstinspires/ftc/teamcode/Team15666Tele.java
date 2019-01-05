@@ -7,7 +7,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -74,90 +73,6 @@ public class Team15666Tele extends LinearOpMode {
         this.telemetry.addData("Drive", drive);
         this.telemetry.addData("Arm", arm);
         this.telemetry.update();
-    }
-
-    interface System {
-        String getTelemetry();
-    }
-
-    interface ControlSystem extends System {
-        Gamepad getDriverGamepad();
-        Gamepad getOperatorGamepad();
-    }
-
-    interface DriveSystem extends System {
-        void update(final ControlSystem controls);
-    }
-
-    interface ArmSystem extends System {
-        void update(final ControlSystem controls);
-    }
-
-    /**
-     * Control system for two, a driver and an operator.
-     */
-    class PairControlSystem implements ControlSystem {
-        public final Gamepad driver;
-        public final Gamepad operator;
-
-        public PairControlSystem(final Gamepad driver, final Gamepad operator) {
-            this.driver = driver;
-            this.operator = operator;
-        }
-
-        public Gamepad getDriverGamepad() {
-            return this.driver;
-        }
-
-        public Gamepad getOperatorGamepad() {
-            return this.operator;
-        }
-
-        @Override
-        public String getTelemetry() {
-            return this.driver.left_stick_x
-                    + "," + this.driver.left_stick_y
-                    + "," + this.driver.right_stick_x
-                    + "," + this.driver.right_stick_y
-                    + " "
-                    + this.operator.left_stick_x
-                    + "," + this.operator.left_stick_y
-                    + "," + this.operator.right_stick_x
-                    + "," + this.operator.right_stick_y;
-        }
-    }
-
-    /**
-     * Point-of-View drive system. The left joystick on the driver gamepad controls speed and the
-     * right joystick controls steering.
-     */
-    class PovDriveSystem implements DriveSystem {
-        public final DcMotor left;
-        public final DcMotor right;
-
-        public PovDriveSystem(
-                final DcMotor left,
-                final DcMotor.Direction leftDirection,
-                final DcMotor right,
-                final DcMotor.Direction rightDirection) {
-            this.left = left;
-            this.left.setDirection(leftDirection);
-            this.right = right;
-            this.right.setDirection(rightDirection);
-        }
-
-        @Override
-        public void update(final ControlSystem controls) {
-            final float forwardBack = controls.getDriverGamepad().left_stick_y;
-            final float leftRight = controls.getDriverGamepad().right_stick_x;
-            this.left.setPower(forwardBack + leftRight);
-            this.right.setPower(forwardBack - leftRight);
-        }
-
-        @Override
-        public String getTelemetry() {
-            return this.left.getPower() + "," + this.right.getPower();
-        }
     }
 
     class ElevatorArmSystem implements ArmSystem {
