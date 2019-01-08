@@ -44,7 +44,8 @@ public class Team15821Tele extends LinearOpMode {
                 this.hardwareMap.get(Team15821Devices.DriveLeftClass, Team15821Devices.DriveLeftName),
                 Team15821Devices.DriveLeftDirection,
                 this.hardwareMap.get(Team15821Devices.DriveRightClass, Team15821Devices.DriveRightName),
-                Team15821Devices.DriveRightDirection);
+                Team15821Devices.DriveRightDirection,
+                0.5f);
         this.armSystem = new TowerRollerArmSystem(
                 this.hardwareMap.get(Team15821Devices.TowerClass, Team15821Devices.TowerName),
                 Team15821Devices.TowerDirection,
@@ -104,7 +105,11 @@ public class Team15821Tele extends LinearOpMode {
             final float rollerIn = controls.getOperatorGamepad().right_trigger;
             final float rollerOut = controls.getOperatorGamepad().left_trigger;
 
-            this.tower.setPower(towerUpDown);
+            if (towerUpDown >= 0.5 || towerUpDown <= -0.5) {
+                this.tower.setPower(towerUpDown);
+            } else {
+                this.tower.setPower(0.0);
+            }
 
             if (rollerIn >= Team15821Devices.RollerTriggerThreshold) {
                 this.roller.setPower(Team15821Devices.RollerPower);

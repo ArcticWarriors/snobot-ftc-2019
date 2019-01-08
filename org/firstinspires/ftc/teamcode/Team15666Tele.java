@@ -44,7 +44,8 @@ public class Team15666Tele extends LinearOpMode {
                 this.hardwareMap.get(Team15666Devices.DriveLeftClass, Team15666Devices.DriveLeftName),
                 Team15666Devices.DriveLeftDirection,
                 this.hardwareMap.get(Team15666Devices.DriveRightClass, Team15666Devices.DriveRightName),
-                Team15666Devices.DriveRightDirection);
+                Team15666Devices.DriveRightDirection,
+                1.0f);
         this.armSystem = new ElevatorArmSystem(
                 this.hardwareMap.get(Team15666Devices.PulleyClass, Team15666Devices.PulleyName),
                 Team15666Devices.PulleyDirection,

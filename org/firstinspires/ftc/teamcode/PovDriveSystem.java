@@ -13,16 +13,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class PovDriveSystem implements DriveSystem {
     public final DcMotor left;
     public final DcMotor right;
+    public final float turnScale;
 
     public PovDriveSystem(
             final DcMotor left,
             final DcMotor.Direction leftDirection,
             final DcMotor right,
-            final DcMotor.Direction rightDirection) {
+            final DcMotor.Direction rightDirection,
+            final float turnScale) {
         this.left = left;
         this.left.setDirection(leftDirection);
         this.right = right;
         this.right.setDirection(rightDirection);
+        this.turnScale = turnScale;
     }
 
     @Override
@@ -38,8 +41,10 @@ public class PovDriveSystem implements DriveSystem {
 
         final float forwardBack = controls.getDriverGamepad().left_stick_y;
         final float leftRight = controls.getDriverGamepad().right_stick_x;
-        this.left.setPower(forwardBack + leftRight);
-        this.right.setPower(forwardBack - leftRight);
+        final float leftPower = (forwardBack + leftRight) * this.turnScale;
+        final float rightPower = (forwardBack - leftRight) * this.turnScale;
+        this.left.setPower(leftPower);
+        this.right.setPower(rightPower);
     }
 
     @Override
