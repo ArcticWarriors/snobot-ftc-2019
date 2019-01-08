@@ -45,22 +45,38 @@ public class Team15821AutoDepot extends LinearOpMode {
                 arm_1.setPower(0.0);
                 right_drive.setPower(-0.5);
                 left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < 5.5) {
-                arm_1.setPower(0.0);
-                right_drive.setPower(-0.5);
-                left_drive.setPower(0.5);
+            } else if (runtime.seconds() < 6.4) {
+                arm_1.setPower(-1.0);
+                right_drive.setPower(0.0);
+                left_drive.setPower(0.0);
             } else if (runtime.seconds() < 7.5) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(-0.5);
+                left_drive.setPower(0.5);
+            } else if (runtime.seconds() < 13.0) {
+                arm_1.setPower(0.0);
+                right_drive.setPower(-0.5);
                 left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < 7.7) {
+            } else if (runtime.seconds() < 13.4) {
+                arm_1.setPower(0.0);
+                right_drive.setPower(-1.0);
+                left_drive.setPower(-1.0);
+            } else if (runtime.seconds() < 13.6) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(1.0);
                 left_drive.setPower(1.0);
-            } else if (runtime.seconds() < 8.7) {
+            } else if (runtime.seconds() < 14.1) {
+                arm_1.setPower(0.0);
+                right_drive.setPower(0.0);
+                left_drive.setPower(0.0);
+            } else if (runtime.seconds() < 17.4) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(0.5);
-                left_drive.setPower(0.5);
+                left_drive.setPower(-0.5);
+            } else if (runtime.seconds() < 23.9) {
+                arm_1.setPower(0.0);
+                right_drive.setPower(0.7);
+                left_drive.setPower(0.7);
             } else {
                 arm_1.setPower(0.0);
                 right_drive.setPower(0.0);
