@@ -33,23 +33,23 @@ public class Team15821AutoCrater extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            if (runtime.seconds() < 3.6) {
+            if (runtime.seconds() < 1.8) {
                 arm_1.setPower(1.0);
                 right_drive.setPower(0.0);
                 left_drive.setPower(0.0);
-            } else if (runtime.seconds() < 4.3) {
+            } else if (runtime.seconds() < 2.5) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(0.5);
                 left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < 4.8) {
+            } else if (runtime.seconds() < 3.0) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(-0.5);
                 left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < 5.4) {
+            } else if (runtime.seconds() < 3.6) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(-0.5);
                 left_drive.setPower(0.5);
-            } else if (runtime.seconds() < 7.4) {
+            } else if (runtime.seconds() < 5.6) {
                 arm_1.setPower(0.0);
                 right_drive.setPower(-0.5);
                 left_drive.setPower(-0.5);
