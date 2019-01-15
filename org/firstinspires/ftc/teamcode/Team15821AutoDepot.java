@@ -36,12 +36,12 @@ public class Team15821AutoDepot extends LinearOpMode {
         final float rotateOffLanderTime = lowerLanderTime + 1.0f;
         final float moveAwayFromLanderTime = rotateOffLanderTime + 0.35f;
         final float lowerArmTime = moveAwayFromLanderTime + 1.0f;
-        final float adjustDrivingAngleTime = lowerArmTime + 1.25f;
-        final float driveToDepotTime = adjustDrivingAngleTime + 6.7f;
+        final float adjustDrivingAngleTime = lowerArmTime + 1.0f;
+        final float driveToDepotTime = adjustDrivingAngleTime + 6.4f;
         final float ejectMarkerTime = driveToDepotTime + 2.0f;
-        final float turnToCraterTime = ejectMarkerTime + 1.2f;
-        final float driveToCraterTime = turnToCraterTime + 3.4f;
-        final float driveCorrectionToCraterTime = driveToCraterTime + 2.6f;
+        final float turnToCraterTime = ejectMarkerTime + 0.8f;
+        final float driveToCraterTime = turnToCraterTime + 2.8f;
+        final float driveCorrectionToCraterTime = driveToCraterTime + 2.7f;
 
         while (opModeIsActive()) {
             if (runtime.seconds() < lowerLanderTime) {
@@ -85,8 +85,8 @@ public class Team15821AutoDepot extends LinearOpMode {
                 // Turn to crater, 3
                 arm_1.setPower(0.0);
                 armServo_1.setPower(0.0);
-                right_drive.setPower(0.5);
-                left_drive.setPower(-0.5);
+                right_drive.setPower(0.8);
+                left_drive.setPower(-0.8);
             } else if (runtime.seconds() < driveToCraterTime) {
                 // Drive to crater, 6.5
                 arm_1.setPower(0.0);

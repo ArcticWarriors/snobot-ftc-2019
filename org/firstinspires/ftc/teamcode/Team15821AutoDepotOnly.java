@@ -36,8 +36,8 @@ public class Team15821AutoDepotOnly extends LinearOpMode {
         final float rotateOffLanderTime = lowerLanderTime + 1.0f;
         final float moveAwayFromLanderTime = rotateOffLanderTime + 0.35f;
         final float lowerArmTime = moveAwayFromLanderTime + 1.0f;
-        final float adjustDrivingAngleTime = lowerArmTime + 1.25f;
-        final float driveToDepotTime = adjustDrivingAngleTime + 6.7f;
+        final float adjustDrivingAngleTime = lowerArmTime + 1.0f;
+        final float driveToDepotTime = adjustDrivingAngleTime + 6.4f;
         final float ejectMarkerTime = driveToDepotTime + 2.0f;
         final float turnToAvoidTime = ejectMarkerTime + 1.2f;
         final float driveToAvoidTime = turnToAvoidTime + 1.0f;
