@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Standard autonomous OpMode for Team 15666.
  */
 
-@Autonomous(name = "Standard Auto", group = "Linear Opmode")
+@Autonomous(name = "Dead Rec Auto", group = "Linear Opmode")
 public class Team15666Auto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 

@@ -4,13 +4,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaRoverRuckus;
-import org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaRoverRuckus;
+        import org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus;
 
 /**
  * Camera autonomous OpMode for Team 15821.
@@ -82,11 +82,12 @@ public class Team15821AutoCamera extends LinearOpMode {
     }
 
     private void update() {
-        this.driveControl.update();
+        this.driveControl.update(this.runtime.seconds());
     }
 
     private void updateTelemetry(final String status) {
         this.telemetry.addData("Status", status);
+        this.telemetry.addData("Camera", this.driveControl.getTelemetry());
         this.telemetry.update();
     }
 }

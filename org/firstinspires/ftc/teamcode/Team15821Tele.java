@@ -6,8 +6,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -18,9 +16,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Team15821Tele extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private ControllerSystem controllerSystem = null;
-    private DriveSystem driveSystem = null;
-    private ArmSystem armSystem = null;
+    private GamepadSystem driver = null;
+    private GamepadSystem operator = null;
+    private DriveSystem leftDrive = null;
+    private DriveSystem rightDrive = null;
+    private RollerArmSystem arm = null;
+
+    private PovDriveController driveControl = null;
+    private RollerArmController armControl = null;
 
     @Override
     public void runOpMode() {
@@ -37,88 +40,34 @@ public class Team15821Tele extends LinearOpMode {
     }
 
     private void initSystems() {
-        this.controllerSystem = new PairControllerSystem(
-                Team15821Devices.getDriverGamepad(this),
-                Team15821Devices.getOperatorGamepad(this));
-        this.driveSystem = new PovDriveSystem(
+        this.driver = new LogitechGamepadSystem(Team15821Devices.getDriverGamepad(this));
+        this.operator = new LogitechGamepadSystem(Team15821Devices.getOperatorGamepad(this));
+        this.leftDrive = new MotorDriveSystem(
                 this.hardwareMap.get(Team15821Devices.DriveLeftClass, Team15821Devices.DriveLeftName),
-                Team15821Devices.DriveLeftDirection,
+                Team15821Devices.DriveLeftDirection);
+        this.rightDrive = new MotorDriveSystem(
                 this.hardwareMap.get(Team15821Devices.DriveRightClass, Team15821Devices.DriveRightName),
                 Team15821Devices.DriveRightDirection);
-        this.armSystem = new TowerRollerArmSystem(
+        this.arm = new RollerArmSystem(
                 this.hardwareMap.get(Team15821Devices.TowerClass, Team15821Devices.TowerName),
                 Team15821Devices.TowerDirection,
                 this.hardwareMap.get(Team15821Devices.RollerClass, Team15821Devices.RollerName),
                 Team15821Devices.RollerDirection);
+        this.driveControl = new PovDriveController(this.driver, this.leftDrive, this.rightDrive);
+        this.armControl = new RollerArmController(this.operator, this.arm);
     }
 
     private void updateSystems() {
-        this.driveSystem.update(this.controllerSystem);
-        this.armSystem.update(this.controllerSystem);
+        this.driveControl.update(this.runtime.seconds());
+        this.armControl.update(this.runtime.seconds());
     }
 
     private void updateTelemetry(final String status) {
-        updateTelemetry(
-                status,
-                this.controllerSystem.getTelemetry(),
-                this.driveSystem.getTelemetry(),
-                this.armSystem.getTelemetry());
-    }
-
-    private void updateTelemetry(
-            final String status, final String control, final String drive, final String arm) {
         this.telemetry.addData("Status", status);
-        this.telemetry.addData("Control", control);
-        this.telemetry.addData("Drive", drive);
-        this.telemetry.addData("Arm", arm);
+        this.telemetry.addData("Driver", this.driver.getTelemetry());
+        this.telemetry.addData("Operator", this.operator.getTelemetry());
+        this.telemetry.addData("POV Drive", this.driveControl.getTelemetry());
+        this.telemetry.addData("Arm", this.armControl.getTelemetry());
         this.telemetry.update();
-    }
-
-    class TowerRollerArmSystem implements ArmSystem {
-        public final DcMotor tower;
-        public final CRServo roller;
-
-        public TowerRollerArmSystem(
-                final DcMotor tower,
-                final DcMotor.Direction towerDirection,
-                final CRServo roller,
-                final CRServo.Direction rollerDirection) {
-            this.tower = tower;
-            this.tower.setDirection(towerDirection);
-            this.roller = roller;
-            this.roller.setDirection(rollerDirection);
-        }
-
-        @Override
-        public void update() {
-
-        }
-
-        @Override
-        public void update(final ControllerSystem controls) {
-            if (controls.getOperatorGamepad() == null) {
-                return;
-            }
-
-            final float towerUpDown = controls.getOperatorGamepad().left_stick_y;
-            final float rollerIn = controls.getOperatorGamepad().right_trigger;
-            final float rollerOut = controls.getOperatorGamepad().left_trigger;
-
-            this.tower.setPower(towerUpDown);
-
-            if (rollerIn >= Team15821Devices.RollerTriggerThreshold) {
-                this.roller.setPower(Team15821Devices.RollerPower);
-            } else if (rollerOut >= Team15821Devices.RollerTriggerThreshold) {
-                this.roller.setPower(-Team15821Devices.RollerPower);
-            } else {
-                this.roller.setPower(0.0f);
-            }
-        }
-
-        @Override
-        public String getTelemetry() {
-            return this.tower.getPower() + "," + this.roller.getPower()
-                    + this.tower.getCurrentPosition();
-        }
     }
 }
