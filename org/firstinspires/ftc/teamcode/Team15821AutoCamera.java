@@ -78,7 +78,16 @@ public class Team15821AutoCamera extends LinearOpMode {
         this.rightDrive = new MotorDriveSystem(
                 this.hardwareMap.get(Team15821Devices.DriveRightClass, Team15821Devices.DriveRightName),
                 Team15821Devices.DriveRightDirection);
-        this.driveControl = new CameraDriveController(this.camera, this.leftDrive, this.rightDrive);
+        this.arm = new RollerArmSystem(
+                this.hardwareMap.get(Team15821Devices.TowerClass, Team15821Devices.TowerName),
+                Team15821Devices.TowerDirection,
+                this.hardwareMap.get(Team15821Devices.RollerClass, Team15821Devices.RollerName),
+                Team15821Devices.RollerDirection);
+        this.driveControl = new CameraDriveController(
+                this.camera,
+                this.leftDrive,
+                this.rightDrive,
+                this.arm);
     }
 
     private void update() {

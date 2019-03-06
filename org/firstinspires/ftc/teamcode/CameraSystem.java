@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface CameraSystem extends System {
     Position getPosition();
     Orientation getOrientation();
-    ArrayList<Mineral> getMinerals();
+    MineralDetection getMineral();
 
     class Position {
         // Distances in inches, origin at center of field
@@ -21,8 +21,13 @@ public interface CameraSystem extends System {
         float z;
     }
 
-    enum Mineral {
+    enum MineralType {
         GOLD,
         SILVER
+    }
+
+    class MineralDetection {
+        MineralType type;
+        float horizontalLocation; // 0.0 is left, 1.0 is right
     }
 }

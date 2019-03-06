@@ -28,19 +28,23 @@ public class PhoneCameraSystem implements CameraSystem {
     }
 
     @Override
-    public ArrayList<Mineral> getMinerals() {
+    public MineralDetection getMineral() {
         final List<Recognition> recognitions = this.tensorflow.getRecognitions();
-        final ArrayList<Mineral> minerals = new ArrayList<>();
+        MineralDetection mineral = null;
 
         for (final Recognition recognition : recognitions) {
             if (Objects.equals(recognition.getLabel(), "Gold Mineral")) {
-                minerals.add(Mineral.GOLD);
-            } else {
-                minerals.add(Mineral.SILVER);
+                float location = recognition.getLeft() / recognition.getImageWidth();
+                if (location > 0.35 && location < 0.75)
+                {
+                    mineral = new MineralDetection();
+                    mineral.type = MineralType.GOLD;
+                    mineral.horizontalLocation = location;
+                }
             }
         }
 
-        return minerals;
+        return mineral;
     }
 
     @Override
