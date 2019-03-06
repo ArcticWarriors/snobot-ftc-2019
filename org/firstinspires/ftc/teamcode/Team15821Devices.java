@@ -21,7 +21,7 @@ public class Team15821Devices {
 
     public static final DcMotor.Direction DriveLeftDirection = DcMotorSimple.Direction.FORWARD;
     public static final DcMotor.Direction DriveRightDirection = DcMotorSimple.Direction.REVERSE;
-    public static final DcMotor.Direction TowerDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotor.Direction TowerDirection = DcMotorSimple.Direction.FORWARD;
     public static final CRServo.Direction RollerDirection = CRServo.Direction.FORWARD;
 
     public static final float RollerTriggerThreshold = 0.5f;
