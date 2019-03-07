@@ -6,6 +6,7 @@ import java.util.Objects;
 public class CameraDriveController implements Controller {
     private abstract class State {
         public final String name;
+        public final float expirationTime;
         public final float left;
         public final float right;
         public final float tower;
@@ -15,11 +16,13 @@ public class CameraDriveController implements Controller {
 
         public State(
                 final String name,
+                final float expirationTime,
                 final float left,
                 final float right,
                 final float tower,
                 final float roller) {
             this.name = name;
+            this.expirationTime = expirationTime;
             this.left = left;
             this.right = right;
             this.tower = tower;
@@ -114,17 +117,17 @@ public class CameraDriveController implements Controller {
         this.stateMachine = new StateMachine(this.input, this.left, this.right, this.arm);
 
         this.stateMachine.addState(
-                new State("Begin", 0.0f, 0.0f, 0.0f, 0.0f) {
+                new State("Begin", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
                         return "Lower from lander";
                     }
                 });
         this.stateMachine.addState(
-                new State("Lower from lander", 0.0f, 0.0f, 1.0f, 0.0f) {
+                new State("Lower from lander", 1.7f, 0.0f, 0.0f, -1.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.7) {
+                        if (this.getStateTime(elapsed) < this.expirationTime) {
                             return this.name;
                         }
 
@@ -132,10 +135,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Rotate off lander", -0.5f, 0.5f, 0.0f, 0.0f) {
+                new State("Rotate off lander", 0.6f, -0.5f, 0.5f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 0.6) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -143,10 +146,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Move away from lander", -0.5f, -0.5f, 0.0f, 0.0f) {
+                new State("Move away from lander",0.2f, -0.5f, -0.5f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 0.2) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -154,10 +157,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Lower arm", 0.0f, 0.0f, -0.7f, 0.0f) {
+                new State("Lower arm",1.5f, 0.0f, 0.0f, 0.7f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -165,12 +168,12 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Examine mineral", 0.0f, 0.0f, 0.0f, 0.0f) {
+                new State("Examine mineral",1.5f, 0.0f, 0.0f, 0.0f, 0.0f) {
                     private int mineralPosition = 0;
 
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.0) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -192,10 +195,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Scan right", 0.6f, -0.6f, 0.0f, 0.0f) {
+                new State("Scan right",0.5f, 0.6f, -0.6f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 0.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -203,10 +206,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Raise arm from left", 0.0f, 0.0f, 0.7f, 0.0f) {
+                new State("Raise arm from left",1.0f, 0.0f, 0.0f, -0.7f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.0) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -214,10 +217,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Raise arm from center", 0.0f, 0.0f, 0.7f, 0.0f) {
+                new State("Raise arm from center",1.0f, 0.0f, 0.0f, -0.7f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.0) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -225,10 +228,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Raise arm from right", 0.0f, 0.0f, 0.7f, 0.0f) {
+                new State("Raise arm from right",1.0f, 0.0f, 0.0f, -0.7f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.0) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -236,10 +239,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to left mineral", -0.8f, -0.8f, 0.0f, 0.0f) {
+                new State("Drive to left mineral",1.7f, -0.8f, -0.8f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.7) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -247,10 +250,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Turn to depot from left mineral", 0.55f, -0.55f, 0.0f, 0.0f) {
+                new State("Turn to depot from left mineral",1.3f, 0.55f, -0.55f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.3) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -258,10 +261,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to depot from left mineral", -0.8f, -0.8f, 0.0f, 0.0f) {
+                new State("Drive to depot from left mineral",1.5f, -0.8f, -0.8f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -269,10 +272,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to center mineral", -0.8f, -0.8f, 0.0f, 0.0f) {
+                new State("Drive to center mineral",2.8f, -0.8f, -0.8f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 2.8) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -280,10 +283,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to right mineral", -0.8f, -0.8f, 0.0f, 0.0f) {
+                new State("Drive to right mineral",1.7f, -0.8f, -0.8f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.7) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -291,10 +294,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Turn to depot from right mineral", -0.55f, 0.55f, 0.0f, 0.0f) {
+                new State("Turn to depot from right mineral",1.6f, -0.55f, 0.55f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.6) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -302,10 +305,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to depot from right mineral", -0.8f, -0.8f, 0.0f, 0.0f) {
+                new State("Drive to depot from right mineral", 1.5f,-0.8f, -0.8f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -313,10 +316,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drop the marker from left", 0.0f, 0.0f, 0.0f, -0.8f) {
+                new State("Drop the marker from left",1.5f, 0.0f, 0.0f, 0.0f, -0.8f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -324,10 +327,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Align with crater from left", -0.6f, 0.6f, 0.0f, 0.0f) {
+                new State("Align with crater from left",2.1f, -0.6f, 0.6f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 2.1) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -335,10 +338,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drop the marker from center", 0.0f, 0.0f, 0.0f, -0.8f) {
+                new State("Drop the marker from center",1.6f, 0.0f, 0.0f, 0.0f, -0.8f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.6) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -346,10 +349,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Align with crater from center", -0.6f, 0.6f, 0.0f, 0.0f) {
+                new State("Align with crater from center",1.2f, -0.6f, 0.6f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.2) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -357,10 +360,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drop the marker from right", 0.0f, 0.0f, 0.0f, -0.8f) {
+                new State("Drop the marker from right", 1.5f,0.0f, 0.0f, 0.0f, -0.8f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -368,10 +371,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Align with crater from right", -0.6f, 0.6f, 0.0f, 0.0f) {
+                new State("Align with crater from right",0.5f, -0.6f, 0.6f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 0.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -379,10 +382,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Drive to crater", 0.6f, 0.6f, 0.0f, 0.0f) {
+                new State("Drive to crater",1.5f, 0.6f, 0.6f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 1.5) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -390,10 +393,10 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("Curve to crater", 0.6f, 0.55f, 0.0f, 0.0f) {
+                new State("Curve to crater",3.4f, 0.6f, 0.55f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
-                        if (this.getStateTime(elapsed) < 3.4) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
                             return this.name;
                         }
 
@@ -401,7 +404,7 @@ public class CameraDriveController implements Controller {
                     }
                 });
         this.stateMachine.addState(
-                new State("End", 0.0f, 0.0f, 0.0f, 0.0f) {
+                new State("End",0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
                         return "End";
