@@ -4,25 +4,31 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaRoverRuckus;
+        import org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus;
 
 /**
- * Standard autonomous OpMode for Team 15821.
+ * Camera autonomous OpMode for Team 15821.
  */
 
-@Autonomous(name = "Depot Auto", group = "Linear Opmode")
+@Autonomous(name = "Depot", group = "Linear Opmode")
 public class Team15821AutoDepot extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor right_drive;
-    private DcMotor left_drive;
-    private DcMotor arm_1;
-    private CRServo armServo_1;
+    private final VuforiaRoverRuckus vuforia = new VuforiaRoverRuckus();
+    private final TfodRoverRuckus tensorflow = new TfodRoverRuckus();
+
+    private CameraSystem camera = null;
+    private DriveSystem leftDrive = null;
+    private DriveSystem rightDrive = null;
+    private RollerArmSystem arm = null;
+
+    private CameraDriveController driveControl = null;
 
     @Override
     public void runOpMode() {
@@ -32,93 +38,67 @@ public class Team15821AutoDepot extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        final float lowerLanderTime = 1.8f;
-        final float rotateOffLanderTime = lowerLanderTime + 1.0f;
-        final float moveAwayFromLanderTime = rotateOffLanderTime + 0.35f;
-        final float lowerArmTime = moveAwayFromLanderTime + 1.0f;
-        final float adjustDrivingAngleTime = lowerArmTime + 1.0f;
-        final float driveToDepotTime = adjustDrivingAngleTime + 6.4f;
-        final float ejectMarkerTime = driveToDepotTime + 2.0f;
-        final float turnToCraterTime = ejectMarkerTime + 0.8f;
-        final float driveToCraterTime = turnToCraterTime + 2.8f;
-        final float driveCorrectionToCraterTime = driveToCraterTime + 2.7f;
+        if (opModeIsActive()) {
+            this.vuforia.activate();
+            this.tensorflow.activate();
 
-        while (opModeIsActive()) {
-            if (runtime.seconds() < lowerLanderTime) {
-                // Lower from lander
-                arm_1.setPower(1.0);
-                armServo_1.setPower(0.0);
-                right_drive.setPower(0.0);
-                left_drive.setPower(0.0);
-            } else if (runtime.seconds() < rotateOffLanderTime) {
-                // Rotate off lander hook
-                arm_1.setPower(0.0);
-                right_drive.setPower(0.5);
-                left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < moveAwayFromLanderTime) {
-                // Move away from lander, 0.8
-                arm_1.setPower(0.0);
-                right_drive.setPower(-0.5);
-                left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < lowerArmTime) {
-                // Lower arm, 1.6
-                arm_1.setPower(-1.0);
-                right_drive.setPower(0.0);
-                left_drive.setPower(0.0);
-            } else if (runtime.seconds() < adjustDrivingAngleTime) {
-                // Adjust driving angle, 1.1
-                arm_1.setPower(0.0);
-                right_drive.setPower(-0.5);
-                left_drive.setPower(0.5);
-            } else if (runtime.seconds() < driveToDepotTime) {
-                // Drive to depot, 5.9
-                arm_1.setPower(0.0);
-                right_drive.setPower(-0.5);
-                left_drive.setPower(-0.5);
-            } else if (runtime.seconds() < ejectMarkerTime) {
-                // Stop and eject the marker, 0.4
-                arm_1.setPower(0.0);
-                armServo_1.setPower(-0.7);
-                right_drive.setPower(0.0);
-                left_drive.setPower(0.0);
-            } else if (runtime.seconds() < turnToCraterTime) {
-                // Turn to crater, 3
-                arm_1.setPower(0.0);
-                armServo_1.setPower(0.0);
-                right_drive.setPower(0.8);
-                left_drive.setPower(-0.8);
-            } else if (runtime.seconds() < driveToCraterTime) {
-                // Drive to crater, 6.5
-                arm_1.setPower(0.0);
-                right_drive.setPower(0.7);
-                left_drive.setPower(0.7);
-            } else if (runtime.seconds() < driveCorrectionToCraterTime) {
-                // Drive to crater, correct angle
-                arm_1.setPower(0.0);
-                right_drive.setPower(0.5);
-                left_drive.setPower(0.7);
-            } else {
-                // Stop
-                arm_1.setPower(0.0);
-                armServo_1.setPower(0.0);
-                right_drive.setPower(0.0);
-                left_drive.setPower(0.0);
+            while (opModeIsActive()) {
+                update();
+                updateTelemetry("Active");
             }
 
-            updateTelemetry("Active");
+            this.tensorflow.deactivate();
+            this.vuforia.deactivate();
         }
+
+        this.tensorflow.close();
+        this.vuforia.close();
     }
 
     private void initSystems() {
-        this.right_drive = hardwareMap.dcMotor.get("right_drive");
-        this.right_drive.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.left_drive = hardwareMap.dcMotor.get("left_drive");
-        this.arm_1 = hardwareMap.dcMotor.get("arm_1");
-        this.armServo_1 = hardwareMap.crservo.get("armServo_1");
+        this.vuforia.initialize(
+                "",
+                VuforiaLocalizer.CameraDirection.BACK,
+                true,
+                false,
+                VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES,
+                0, 0, 0,
+                0, 0, 0,
+                true);
+        this.tensorflow.initialize(
+                this.vuforia,
+                0.4f,
+                true,
+                true);
+
+        this.camera = new PhoneCameraSystem(this.vuforia, this.tensorflow);
+        this.leftDrive = new MotorDriveSystem(
+                this.hardwareMap.get(Team15821Devices.DriveLeftClass, Team15821Devices.DriveLeftName),
+                Team15821Devices.DriveLeftDirection);
+        this.rightDrive = new MotorDriveSystem(
+                this.hardwareMap.get(Team15821Devices.DriveRightClass, Team15821Devices.DriveRightName),
+                Team15821Devices.DriveRightDirection);
+        this.arm = new RollerArmSystem(
+                this.hardwareMap.get(Team15821Devices.TowerClass, Team15821Devices.TowerName),
+                Team15821Devices.TowerDirection,
+                this.hardwareMap.get(Team15821Devices.RollerClass, Team15821Devices.RollerName),
+                Team15821Devices.RollerDirection);
+        this.driveControl = new CameraDriveController(
+                this.camera,
+                this.leftDrive,
+                this.rightDrive,
+                this.arm,
+                false,
+                false);
+    }
+
+    private void update() {
+        this.driveControl.update(this.runtime.seconds());
     }
 
     private void updateTelemetry(final String status) {
         this.telemetry.addData("Status", status);
+        this.telemetry.addData("Camera", this.driveControl.getTelemetry());
         this.telemetry.update();
     }
 }

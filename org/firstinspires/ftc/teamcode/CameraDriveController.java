@@ -96,6 +96,9 @@ public class CameraDriveController implements Controller {
     private final DriveSystem right;
     private final RollerArmSystem arm;
 
+    private final boolean stopAfterDepot;
+    private final boolean startAtCrater;
+
     private final StateMachine stateMachine;
 
     private String telemetry;
@@ -108,11 +111,15 @@ public class CameraDriveController implements Controller {
             final CameraSystem input,
             final DriveSystem left,
             final DriveSystem right,
-            final RollerArmSystem arm) {
+            final RollerArmSystem arm,
+            final boolean stopAfterDepot,
+            final boolean startAtCrater) {
         this.input = input;
         this.left = left;
         this.right = right;
         this.arm = arm;
+        this.stopAfterDepot = stopAfterDepot;
+        this.startAtCrater = startAtCrater;
 
         final float driveSpeed = 0.8f;
         final float turnSpeed = 0.6f;
@@ -220,7 +227,7 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Drive to left mineral";
+                        return startAtCrater ? "Drive to crater only" : "Drive to left mineral";
                     }
                 });
         this.stateMachine.addState(
@@ -231,7 +238,7 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Drive to center mineral";
+                        return startAtCrater ? "Drive to crater only" : "Drive to center mineral";
                     }
                 });
         this.stateMachine.addState(
@@ -242,7 +249,7 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Drive to right mineral";
+                        return startAtCrater ? "Drive to crater only" : "Drive to right mineral";
                     }
                 });
         this.stateMachine.addState(
@@ -330,7 +337,8 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Align with crater from left";
+
+                        return stopAfterDepot ? "End" : "Align with crater from left";
                     }
                 });
         this.stateMachine.addState(
@@ -352,7 +360,7 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Align with crater from center";
+                        return stopAfterDepot ? "End" : "Align with crater from center";
                     }
                 });
         this.stateMachine.addState(
@@ -374,7 +382,7 @@ public class CameraDriveController implements Controller {
                             return this.name;
                         }
 
-                        return "Align with crater from right";
+                        return stopAfterDepot ? "End" : "Align with crater from right";
                     }
                 });
         this.stateMachine.addState(
@@ -401,6 +409,17 @@ public class CameraDriveController implements Controller {
                 });
         this.stateMachine.addState(
                 new State("Curve to crater",2.8f*driveTimeCoeff, driveSpeed, driveSpeed*0.9f, 0.0f, 0.0f) {
+                    @Override
+                    public String getNext(double elapsed, CameraSystem input) {
+                        if (this.getStateTime(elapsed) < expirationTime) {
+                            return this.name;
+                        }
+
+                        return "End";
+                    }
+                });
+        this.stateMachine.addState(
+                new State("Drive to crater only",1.5f*driveTimeCoeff, -driveSpeed, -driveSpeed, 0.0f, 0.0f) {
                     @Override
                     public String getNext(double elapsed, CameraSystem input) {
                         if (this.getStateTime(elapsed) < expirationTime) {

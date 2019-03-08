@@ -16,8 +16,8 @@ package org.firstinspires.ftc.teamcode;
  * Camera autonomous OpMode for Team 15821.
  */
 
-@Autonomous(name = "Camera Auto", group = "Linear Opmode")
-public class Team15821AutoCamera extends LinearOpMode {
+@Autonomous(name = "Crater Only", group = "Linear Opmode")
+public class Team15821AutoCraterOnly extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private final VuforiaRoverRuckus vuforia = new VuforiaRoverRuckus();
@@ -87,7 +87,9 @@ public class Team15821AutoCamera extends LinearOpMode {
                 this.camera,
                 this.leftDrive,
                 this.rightDrive,
-                this.arm);
+                this.arm,
+                true,
+                true);
     }
 
     private void update() {
